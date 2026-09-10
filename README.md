@@ -54,7 +54,7 @@ Voici un aperçu des différentes options de personnalisation disponibles pour l
 ### Alignement de l'Icône Principale
 * **À gauche :**
   
-  ![Gauche](https://raw.githubusercontent.com/FieldITech-Official/FieldITechMultifunctionCard/main/examples/Icone%20Principale%20%C3%à%20Gauche.png)
+  ![Gauche](https://github.com/FieldITech-Official/FieldITechMultifunctionCard/blob/main/examples/Icone%20Principale%20%C3%A0%20Gauche.png)
 * **Centré :**
   
   ![Centré](https://raw.githubusercontent.com/FieldITech-Official/FieldITechMultifunctionCard/main/examples/Icone%20Principale%20%C3%A0%20Centr%C3%A9.png)
