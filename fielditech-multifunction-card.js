@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------
-// FieldITechMultifunctionCard  (Intégration complète : Titre, Entités, Barres Multiples, Boutons & Alertes Multiples) - https://fielditech.com
+// FieldITechMultifunctionCard (Intégration complète : Titre, Entités, Barres Multiples, Boutons & Alertes Multiples) - https://fielditech.com
 // --------------------------------------------------------------------------------
 
 // Découpe une liste de boutons en lignes, en respectant la config "row_per_row_N" (1 à 4 par ligne, défaut 4).
@@ -18,7 +18,7 @@ function getButtonRows(buttons, cfg) {
   return rows;
 }
 
-class FieldITechMultifunctionCard  extends HTMLElement {
+class FieldITechMultifunctionCard extends HTMLElement {
   static ICON_BY_DEVICE_CLASS = {
     temperature: "mdi:thermometer",
     humidity: "mdi:water-percent",
@@ -134,8 +134,8 @@ class FieldITechMultifunctionCard  extends HTMLElement {
     const deviceClass = stateObj.attributes ? stateObj.attributes.device_class : "";
 
     return (
-      (deviceClass && FieldITechMultifunctionCard .ICON_BY_DEVICE_CLASS[deviceClass]) ||
-      FieldITechMultifunctionCard .ICON_BY_DOMAIN[domain] ||
+      (deviceClass && FieldITechMultifunctionCard.ICON_BY_DEVICE_CLASS[deviceClass]) ||
+      FieldITechMultifunctionCard.ICON_BY_DOMAIN[domain] ||
       "mdi:power"
     );
   }
@@ -262,10 +262,10 @@ class FieldITechMultifunctionCard  extends HTMLElement {
     try {
       this._renderInner();
     } catch (err) {
-      console.error("FieldITechMultifunctionCard : erreur de rendu", err);
+      console.error("FieldITechMultifunctionCard: erreur de rendu", err);
       this.shadowRoot.innerHTML = `
         <ha-card style="padding: 16px; color: #ef4444; font-size: 13px;">
-          Erreur d'affichage FieldITechMultifunctionCard  : ${err && err.message ? err.message : "inconnue"}
+          Erreur d'affichage FieldITechMultifunctionCard: ${err && err.message ? err.message : "inconnue"}
         </ha-card>
       `;
     }
@@ -1036,7 +1036,7 @@ class FieldITechMultifunctionCard  extends HTMLElement {
   }
 }
 
-class FieldITechMultifunctionCard Editor extends HTMLElement {
+class FieldITechMultifunctionCardEditor extends HTMLElement {
   constructor() {
     super();
     this._collapsedSections = {
@@ -2338,13 +2338,13 @@ class FieldITechMultifunctionCard Editor extends HTMLElement {
   }
 }
 
-customElements.define("fielditech-multifunction-card", FieldITechMultifunctionCard );
-customElements.define("fielditech-multifunction-card-editor", FieldITechMultifunctionCard Editor);
+customElements.define("fielditech-multifunction-card", FieldITechMultifunctionCard);
+customElements.define("fielditech-multifunction-card-editor", FieldITechMultifunctionCardEditor);
 
 window.customCards = window.customCards || [];
 window.customCards.push({
   type: "fielditech-multifunction-card",
-  name: "FieldITechMultifunctionCard ",
+  name: "FieldITechMultifunctionCard",
   description: "Version complète avec alertes multiples (Air, Sécurité) et options visuelles étendues.",
   preview: true,
 });
