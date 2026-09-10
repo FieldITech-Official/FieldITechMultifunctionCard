@@ -1,6 +1,9 @@
 // --------------------------------------------------------------------------------
 // FieldITechMultifunctionCard (Intégration complète : Titre, Entités, Barres Multiples, Boutons & Alertes Multiples) - https://fielditech.com
 // --------------------------------------------------------------------------------
+
+// Découpe une liste de boutons en lignes, en respectant la config "row_per_row_N" (1 à 4 par ligne, défaut 4).
+// Fonction partagée entre le rendu de la carte et l'éditeur (logique auparavant dupliquée).
 function getButtonRows(buttons, cfg) {
   const rows = [];
   let index = 0;
@@ -102,6 +105,7 @@ class FieldITechMultifunctionCard extends HTMLElement {
       main_icon: "mdi:home",
       presence: "",
       hide_main_icon: false,
+      hide_telemetry: false,
       first_layout: "grid",
       entities: [],
       show_bottom_bars: false,
@@ -287,10 +291,13 @@ class FieldITechMultifunctionCard extends HTMLElement {
       action: item.action || { action: "more-info" }
     })).filter(item => !!item.entity);
 
-    const activeTop = rawSlots[0] || null;
-    const activeBottom = rawSlots[1] || null;
+    const hideTelemetry = !!cfg.hide_telemetry;
+    const visibleSlots = hideTelemetry ? [] : rawSlots;
 
-    const effectiveCount = rawSlots.length;
+    const activeTop = visibleSlots[0] || null;
+    const activeBottom = visibleSlots[1] || null;
+
+    const effectiveCount = visibleSlots.length;
     const hasTelemetry = effectiveCount > 0;
     const hideMain = !!cfg.hide_main_icon;
 
@@ -424,7 +431,7 @@ class FieldITechMultifunctionCard extends HTMLElement {
 
     let extraHtml = "";
     if (effectiveCount >= 3) {
-      const extraItems = rawSlots.slice(2);
+      const extraItems = visibleSlots.slice(2);
       let i = 0;
       let pairCounter = 0;
       while (i < extraItems.length) {
@@ -1502,6 +1509,21 @@ class FieldITechMultifunctionCardEditor extends HTMLElement {
     hideMainIconRow.appendChild(hideMainIconLabel);
     wrapper.appendChild(hideMainIconRow);
 
+    const hideTelemetryRow = document.createElement("div");
+    hideTelemetryRow.className = "row";
+    const hideTelemetryLabel = document.createElement("label");
+    hideTelemetryLabel.className = "checkbox-row";
+    this._hideTelemetryCheckbox = document.createElement("input");
+    this._hideTelemetryCheckbox.type = "checkbox";
+    this._hideTelemetryCheckbox.addEventListener("change", () => {
+      this._valueChanged("hide_telemetry", this._hideTelemetryCheckbox.checked);
+      this._updateVisibility();
+    });
+    hideTelemetryLabel.appendChild(this._hideTelemetryCheckbox);
+    hideTelemetryLabel.appendChild(document.createTextNode("Masquer les cartes de télémétrie"));
+    hideTelemetryRow.appendChild(hideTelemetryLabel);
+    wrapper.appendChild(hideTelemetryRow);
+
     this._firstLayoutField = document.createElement("div");
     this._firstLayoutField.className = "field conditional-row";
     const firstLayoutLabel = document.createElement("label");
@@ -2006,6 +2028,7 @@ class FieldITechMultifunctionCardEditor extends HTMLElement {
     if (this._secIconPicker) this._secIconPicker.value = this._config.sec_icon || "";
 
     if (this._hideMainIconCheckbox) this._hideMainIconCheckbox.checked = !!this._config.hide_main_icon;
+    if (this._hideTelemetryCheckbox) this._hideTelemetryCheckbox.checked = !!this._config.hide_telemetry;
     if (this._showAirQualityCheckbox) this._showAirQualityCheckbox.checked = !!this._config.show_air_quality;
     if (this._showSecurityCheckbox) this._showSecurityCheckbox.checked = !!this._config.show_security_alert;
     if (this._showBottomBarsCheckbox) this._showBottomBarsCheckbox.checked = !!this._config.show_bottom_bars;
