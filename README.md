@@ -42,3 +42,5 @@ Vous pouvez l'ajouter en tant que dépôt personnalisé (Lovelace plugin) dans H
    ```yaml
    url: /local/fielditech-multifunction-card.js
    type: module
+
+![Aperçu](https://raw.githubusercontent.com/FieldITech-Official/FieldITechMultifunctionCard/main/examples/Gen.png)
