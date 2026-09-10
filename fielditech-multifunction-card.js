@@ -2272,6 +2272,14 @@ _syncValues() {
           const btnNameInput = document.createElement("input");
           btnNameInput.type = "text";
           btnNameInput.value = btn.name || "";
+          btnNameInput.style.width = "100%";
+          btnNameInput.style.padding = "8px";
+          btnNameInput.style.background = "var(--secondary-background-color, #1a2332)";
+          btnNameInput.style.border = "1px solid var(--divider-color, #334155)";
+          btnNameInput.style.borderRadius = "4px";
+          btnNameInput.style.color = "var(--primary-text-color, #ffffff)";
+          btnNameInput.style.boxSizing = "border-box";
+          
           btnNameInput.addEventListener("input", (e) => this._updateButtonProperty(index, "name", e.target.value, false));
           btnNameField.appendChild(btnNameInput);
           box.appendChild(btnNameField);
