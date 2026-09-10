@@ -2266,23 +2266,15 @@ _syncValues() {
           });
           box.appendChild(entityPicker);
 
-          const btnNameField = document.createElement("div");
-          btnNameField.className = "field";
-          btnNameField.innerHTML = `<label>Nom personnalisé</label>`;
-          const btnNameInput = document.createElement("input");
-          btnNameInput.type = "text";
-          btnNameInput.value = btn.name || "";
-          btnNameInput.style.width = "100%";
-          btnNameInput.style.padding = "8px";
-          btnNameInput.style.background = "var(--secondary-background-color, #1a2332)";
-          btnNameInput.style.border = "1px solid var(--divider-color, #334155)";
-          btnNameInput.style.borderRadius = "4px";
-          btnNameInput.style.color = "var(--primary-text-color, #ffffff)";
-          btnNameInput.style.boxSizing = "border-box";
-          
-          btnNameInput.addEventListener("input", (e) => this._updateButtonProperty(index, "name", e.target.value, false));
-          btnNameField.appendChild(btnNameInput);
-          box.appendChild(btnNameField);
+          const btnNameField = document.createElement("ha-textfield");
+          btnNameField.label = "Nom personnalisé";
+          btnNameField.value = btn.name || "";
+          btnNameField.style.width = "100%";
+          btnNameField.style.marginBottom = "12px";
+          btnNameField.addEventListener("input", (e) => {
+            this._updateButtonProperty(index, "name", e.target.value, false);
+          });
+          box.insertBefore(btnNameField, iconPicker);
 
           const iconPicker = document.createElement("ha-icon-picker");
           iconPicker.label = "Icône du bouton";
