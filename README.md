@@ -43,5 +43,34 @@ Vous pouvez l'ajouter en tant que dépôt personnalisé (Lovelace plugin) dans H
    url: /local/fielditech-multifunction-card.js
    type: module
 
-#### Examples
-![Aperçu](https://raw.githubusercontent.com/FieldITech-Official/FieldITechMultifunctionCard/main/examples/Gen.png)
+## 📸 Exemples et Configurations
+
+Voici un aperçu des différentes options de personnalisation disponibles pour la **FieldITechMultifunctionCard** :
+
+### Vue Générale
+![Vue Générale](https://raw.githubusercontent.com/FieldITech-Official/FieldITechMultifunctionCard/main/examples/Gen.png)
+
+### Alignement de l'Icône Principale
+* **À gauche :**
+  ![Gauche](https://raw.githubusercontent.com/FieldITech-Official/FieldITechMultifunctionCard/main/examples/Icone%20Principale%20%C3%à%20Gauche.png)
+* **Centré :**
+  ![Centré](https://raw.githubusercontent.com/FieldITech-Official/FieldITechMultifunctionCard/main/examples/Icone%20Principale%20%C3%A0%20Centr%C3%A9.png)
+* **À droite :**
+  ![Droite](https://raw.githubusercontent.com/FieldITech-Official/FieldITechMultifunctionCard/main/examples/Icone%20Principale%20%C3%A0%20Droite.png)
+
+### Télémesures
+* **Côte à côte :**
+  ![Côte à côte](https://raw.githubusercontent.com/FieldITech-Official/FieldITechMultifunctionCard/main/examples/Telemesure%20cote%20%C3%A0%20cote.png)
+* **Superposé :**
+  ![Superposé](https://raw.githubusercontent.com/FieldITech-Official/FieldITechMultifunctionCard/main/examples/Telemesure%20superpos%C3%A9.png)
+
+### Barres Graduées
+![Barres Graduées](https://raw.githubusercontent.com/FieldITech-Official/FieldITechMultifunctionCard/main/examples/Barres%20Gradu%C3%A9es.png)
+
+### Boutons Personnalisables
+![Boutons](https://raw.githubusercontent.com/FieldITech-Official/FieldITechMultifunctionCard/main/examples/Boutons%20Personnalisables.png)
+
+### Cartes d'Alerte
+![Alertes](https://raw.githubusercontent.com/FieldITech-Official/FieldITechMultifunctionCard/main/examples/Cartes%20d'Alerte.png)
+
+
