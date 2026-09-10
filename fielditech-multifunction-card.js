@@ -1,9 +1,6 @@
 // --------------------------------------------------------------------------------
 // FieldITechMultifunctionCard (Intégration complète : Titre, Entités, Barres Multiples, Boutons & Alertes Multiples) - https://fielditech.com
 // --------------------------------------------------------------------------------
-
-// Découpe une liste de boutons en lignes, en respectant la config "row_per_row_N" (1 à 4 par ligne, défaut 4).
-// Fonction partagée entre le rendu de la carte et l'éditeur (logique auparavant dupliquée).
 function getButtonRows(buttons, cfg) {
   const rows = [];
   let index = 0;
@@ -512,7 +509,9 @@ class FieldITechMultifunctionCard extends HTMLElement {
       });
     }
 
-    const hasAnyContentAboveAlerts = (!hideMain || hasTelemetry || (showBottomBars && bars.length > 0) || (showButtons && buttons.length > 0));
+    const hasAnyContentAboveBars = (!hideMain || hasTelemetry);
+    const hasAnyContentAboveButtons = (hasAnyContentAboveBars || (showBottomBars && bars.length > 0));
+    const hasAnyContentAboveAlerts = (hasAnyContentAboveButtons || (showButtons && buttons.length > 0));
 
     const cardBg = cfg.card_background || "radial-gradient(circle at 50% 0%, #151d2a 0%, #080b11 100%)";
     const cardBorder = cfg.card_border_color || "rgba(0, 242, 254, 0.3)";
@@ -724,8 +723,7 @@ class FieldITechMultifunctionCard extends HTMLElement {
           display: flex;
           flex-direction: column;
           gap: 12px;
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
-          padding-top: 14px;
+          ${hasAnyContentAboveBars ? 'border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 14px;' : ''}
         }
         .bar-item {
           cursor: pointer;
@@ -789,8 +787,7 @@ class FieldITechMultifunctionCard extends HTMLElement {
           display: flex;
           flex-direction: column;
           gap: 10px;
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
-          padding-top: 14px;
+          ${hasAnyContentAboveButtons ? 'border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 14px;' : ''}
         }
         .buttons-row-grid {
           display: grid;
@@ -2165,7 +2162,7 @@ class FieldITechMultifunctionCardEditor extends HTMLElement {
         // Grille de sélection des couleurs (Début, Fin/Dégradé, Texte, Icône)
         const barColorsRow = this._buildColorGrid([
           { label: "Couleur Début", key: "color", value: bar.color || "#00f2fe" },
-          { label: "Couleur Fin (Dégradé)", key: "color_end", value: bar.color_end || "" },
+          { label: "Couleur Fin", key: "color_end", value: bar.color_end || "" },
           { label: "Couleur Texte", key: "text_color", value: bar.text_color || bar.color || "#00f2fe" },
           { label: "Couleur Icône", key: "icon_color", value: bar.icon_color || bar.color || "#00f2fe" },
         ], (key, value) => this._updateBarProperty(index, key, value, false));
