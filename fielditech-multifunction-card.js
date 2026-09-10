@@ -1,9 +1,6 @@
 // --------------------------------------------------------------------------------
 // FieldITechCard (Intégration complète : Titre, Entités, Barres Multiples, Boutons & Alertes Multiples) - https://fielditech.com
 // --------------------------------------------------------------------------------
-
-// Découpe une liste de boutons en lignes, en respectant la config "row_per_row_N" (1 à 4 par ligne, défaut 4).
-// Fonction partagée entre le rendu de la carte et l'éditeur (logique auparavant dupliquée).
 function getButtonRows(buttons, cfg) {
   const rows = [];
   let index = 0;
