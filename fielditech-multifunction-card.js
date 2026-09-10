@@ -1,6 +1,9 @@
 // --------------------------------------------------------------------------------
-// FieldITechCard (Intégration complète : Titre, Entités, Barres Multiples, Boutons & Alertes Multiples) - https://fielditech.com
+// FieldITechMultifunctionCard  (Intégration complète : Titre, Entités, Barres Multiples, Boutons & Alertes Multiples) - https://fielditech.com
 // --------------------------------------------------------------------------------
+
+// Découpe une liste de boutons en lignes, en respectant la config "row_per_row_N" (1 à 4 par ligne, défaut 4).
+// Fonction partagée entre le rendu de la carte et l'éditeur (logique auparavant dupliquée).
 function getButtonRows(buttons, cfg) {
   const rows = [];
   let index = 0;
@@ -15,7 +18,7 @@ function getButtonRows(buttons, cfg) {
   return rows;
 }
 
-class FieldITechCard extends HTMLElement {
+class FieldITechMultifunctionCard  extends HTMLElement {
   static ICON_BY_DEVICE_CLASS = {
     temperature: "mdi:thermometer",
     humidity: "mdi:water-percent",
@@ -131,8 +134,8 @@ class FieldITechCard extends HTMLElement {
     const deviceClass = stateObj.attributes ? stateObj.attributes.device_class : "";
 
     return (
-      (deviceClass && FieldITechCard.ICON_BY_DEVICE_CLASS[deviceClass]) ||
-      FieldITechCard.ICON_BY_DOMAIN[domain] ||
+      (deviceClass && FieldITechMultifunctionCard .ICON_BY_DEVICE_CLASS[deviceClass]) ||
+      FieldITechMultifunctionCard .ICON_BY_DOMAIN[domain] ||
       "mdi:power"
     );
   }
@@ -259,10 +262,10 @@ class FieldITechCard extends HTMLElement {
     try {
       this._renderInner();
     } catch (err) {
-      console.error("FieldITechCard: erreur de rendu", err);
+      console.error("FieldITechMultifunctionCard : erreur de rendu", err);
       this.shadowRoot.innerHTML = `
         <ha-card style="padding: 16px; color: #ef4444; font-size: 13px;">
-          Erreur d'affichage FieldITechCard : ${err && err.message ? err.message : "inconnue"}
+          Erreur d'affichage FieldITechMultifunctionCard  : ${err && err.message ? err.message : "inconnue"}
         </ha-card>
       `;
     }
@@ -342,7 +345,7 @@ class FieldITechCard extends HTMLElement {
       }
     }
 
-    // --- CALCUL ALERTE SÉCURITÉ & OUVRANTS (MIS À JOUR : INDISPONIBLE EN ORANGE) ---
+    // --- CALCUL ALERTE SÉCURITÉ & OUVRANTS ---
     const showSecurityAlert = !!cfg.show_security_alert && !!cfg.security_entity;
     let secStatusText = "Sécurisé";
     let secColor = cfg.sec_color || "#22c55e";
@@ -354,12 +357,12 @@ class FieldITechCard extends HTMLElement {
       const secObj = hass.states[cfg.security_entity];
       if (!secObj) {
         secStatusText = "Introuvable";
-        secColor = "#f59e0b"; // Orange pour indiquer l'anomalie/indisponibilité
+        secColor = "#f59e0b";
         secIcon = "mdi:shield-alert";
         secAdviceText = "Entité de sécurité introuvable";
       } else if (secObj.state === "unavailable" || secObj.state === "unknown") {
         secStatusText = "Indisponible";
-        secColor = "#f59e0b"; // Orange demandé pour le statut indisponible ou inconnu
+        secColor = "#f59e0b";
         secIcon = "mdi:shield-off";
         secAdviceText = "Capteur hors ligne ou injoignable";
       } else {
@@ -367,7 +370,6 @@ class FieldITechCard extends HTMLElement {
         const deviceClass = secObj.attributes ? secObj.attributes.device_class : "";
         const domain = cfg.security_entity.split(".")[0];
 
-        // Adaptation dynamique de l'icône de base selon le type d'équipement si non surchargée
         if (!cfg.sec_icon) {
           if (deviceClass === "door") secIcon = "mdi:door-open";
           else if (deviceClass === "window") secIcon = "mdi:window-open";
@@ -378,7 +380,6 @@ class FieldITechCard extends HTMLElement {
           else secIcon = "mdi:alert-circle";
         }
 
-        // Évaluation intelligente de l'état et de l'alerte
         let isAlert = false;
 
         if (domain === "alarm_control_panel") {
@@ -924,7 +925,7 @@ class FieldITechCard extends HTMLElement {
                     const barName = this._resolveName(bar.name, stateObj, bar.entity, "Barre");
                     const barIcon = this._resolveIcon(bar.icon, stateObj);
                     
-                    const barTextColor = bar.text_color || "#ffffff";
+                    const barTextColor = bar.text_color || startColor;
                     const barIconColor = bar.icon_color || startColor;
 
                     return `
@@ -1035,7 +1036,7 @@ class FieldITechCard extends HTMLElement {
   }
 }
 
-class FieldITechCardEditor extends HTMLElement {
+class FieldITechMultifunctionCard Editor extends HTMLElement {
   constructor() {
     super();
     this._collapsedSections = {
@@ -1181,7 +1182,6 @@ class FieldITechCardEditor extends HTMLElement {
   }
 
   // Construit une grille de sélecteurs couleur et délègue les changements à un seul écouteur.
-  // defs: [{ label, key, value }] — onChange(key, value) est appelé à chaque modification.
   _buildColorGrid(defs, onChange) {
     const row = document.createElement("div");
     row.style.display = "grid";
@@ -2162,6 +2162,15 @@ class FieldITechCardEditor extends HTMLElement {
         });
         box.appendChild(iconPicker);
 
+        // Grille de sélection des couleurs (Début, Fin/Dégradé, Texte, Icône)
+        const barColorsRow = this._buildColorGrid([
+          { label: "Couleur Début", key: "color", value: bar.color || "#00f2fe" },
+          { label: "Couleur Fin (Dégradé)", key: "color_end", value: bar.color_end || "" },
+          { label: "Couleur Texte", key: "text_color", value: bar.text_color || bar.color || "#00f2fe" },
+          { label: "Couleur Icône", key: "icon_color", value: bar.icon_color || bar.color || "#00f2fe" },
+        ], (key, value) => this._updateBarProperty(index, key, value, false));
+        box.appendChild(barColorsRow);
+
         const limitsRow = document.createElement("div");
         limitsRow.style.display = "grid";
         limitsRow.style.gridTemplateColumns = "1fr 1fr";
@@ -2329,13 +2338,13 @@ class FieldITechCardEditor extends HTMLElement {
   }
 }
 
-customElements.define("fielditech-multifunction-card", FieldITechCard);
-customElements.define("fielditech-multifunction-card-editor", FieldITechCardEditor);
+customElements.define("fielditech-multifunction-card", FieldITechMultifunctionCard );
+customElements.define("fielditech-multifunction-card-editor", FieldITechMultifunctionCard Editor);
 
 window.customCards = window.customCards || [];
 window.customCards.push({
   type: "fielditech-multifunction-card",
-  name: "FieldITechCard",
+  name: "FieldITechMultifunctionCard ",
   description: "Version complète avec alertes multiples (Air, Sécurité) et options visuelles étendues.",
   preview: true,
 });
