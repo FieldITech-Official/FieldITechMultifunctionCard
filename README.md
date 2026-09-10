@@ -32,7 +32,7 @@ Si ce projet vous est utile et vous fait gagner un peu de temps, vous pouvez m'a
 Vous pouvez l'ajouter en tant que dépôt personnalisé (Lovelace plugin) dans HACS :
 1. Allez dans **HACS** > **Frontend**.
 2. Cliquez sur les trois petits points en haut à droite > **Dépôts personnalisés**.
-3. Entrez l'URL de votre dépôt GitHub et choisissez la catégorie **Tableau de bord**.
+3. Entrez l'URL de votre dépôt GitHub https://github.com/FieldITech-Official/FieldITechMultifunctionCard et choisissez la catégorie **Tableau de bord**.
 4. Installez la carte.
 
 ### 2. Installation Manuelle
