@@ -1985,7 +1985,7 @@ class FieldITechMultifunctionCardEditor extends HTMLElement {
     }
   }
 
-  _syncValues() {
+_syncValues() {
     if (!this._config) return;
     if (this._titleInput && document.activeElement !== this._titleInput) {
       if (this._titleInput.value !== (this._config.title || "")) {
@@ -2073,144 +2073,142 @@ class FieldITechMultifunctionCardEditor extends HTMLElement {
       }
     }
 
-    if (this._entitiesContainer && this._entitiesContainer.children.length !== entities.length) {
-      this._entitiesContainer.innerHTML = "";
-      entities.forEach((item, index) => {
-        const box = document.createElement("div");
-        box.className = "entity-editor-box";
-        box.innerHTML = `
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <strong style="color: #00f2fe; font-size: 13px;">Entité #${index + 1}</strong>
-            <button class="btn btn-danger delete-btn" type="button">Supprimer</button>
-          </div>
-        `;
+    // Gestion propre du conteneur des entités de télémétrie
+    this._entitiesContainer.innerHTML = "";
+    entities.forEach((item, index) => {
+      const box = document.createElement("div");
+      box.className = "entity-editor-box";
+      box.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <strong style="color: #00f2fe; font-size: 13px;">Entité #${index + 1}</strong>
+          <button class="btn btn-danger delete-btn" type="button">Supprimer</button>
+        </div>
+      `;
 
-        const entityPicker = document.createElement("ha-entity-picker");
-        entityPicker.label = `Entité ${index + 1}`;
-        entityPicker.value = item.entity || "";
-        if (this._hass) entityPicker.hass = this._hass;
-        entityPicker.addEventListener("value-changed", (ev) => {
-          ev.stopPropagation();
-          this._updateEntityProperty(index, "entity", ev.detail.value);
-        });
-        box.appendChild(entityPicker);
-
-        const iconPicker = document.createElement("ha-icon-picker");
-        iconPicker.label = "Icône personnalisée";
-        iconPicker.value = item.icon || "";
-        if (this._hass) iconPicker.hass = this._hass;
-        iconPicker.addEventListener("value-changed", (ev) => {
-          ev.stopPropagation();
-          this._updateEntityProperty(index, "icon", ev.detail.value);
-        });
-        box.appendChild(iconPicker);
-
-        const colorsRow = this._buildColorGrid([
-          { label: "Bordure", key: "color", value: item.color || "#00f2fe" },
-          { label: "Texte", key: "text_color", value: item.text_color || item.color || "#00f2fe" },
-          { label: "Icône", key: "icon_color", value: item.icon_color || "#ffffff" },
-        ], (key, value) => this._updateEntityProperty(index, key, value));
-        box.appendChild(colorsRow);
-
-        const actionField = document.createElement("div");
-        actionField.className = "field";
-        actionField.innerHTML = `<label>Action au clic</label>`;
-        const actionSelector = document.createElement("ha-selector");
-        actionSelector.selector = { ui_action: {} };
-        actionSelector.value = item.action || { action: "more-info" };
-        if (this._hass) actionSelector.hass = this._hass;
-        actionSelector.addEventListener("value-changed", (ev) => {
-          ev.stopPropagation();
-          this._updateEntityProperty(index, "action", ev.detail.value);
-        });
-        actionField.appendChild(actionSelector);
-        box.appendChild(actionField);
-
-        box.querySelector(".delete-btn").addEventListener("click", () => {
-          const entitiesCopy = [...(this._config.entities || [])];
-          entitiesCopy.splice(index, 1);
-          this._valueChanged("entities", entitiesCopy);
-          this._syncValues();
-        });
-
-        this._entitiesContainer.appendChild(box);
+      const entityPicker = document.createElement("ha-entity-picker");
+      entityPicker.label = `Entité ${index + 1}`;
+      entityPicker.value = item.entity || "";
+      if (this._hass) entityPicker.hass = this._hass;
+      entityPicker.addEventListener("value-changed", (ev) => {
+        ev.stopPropagation();
+        this._updateEntityProperty(index, "entity", ev.detail.value);
       });
-    }
+      box.appendChild(entityPicker);
 
-    if (this._barsContainer && this._barsContainer.children.length !== bars.length) {
-      this._barsContainer.innerHTML = "";
-      bars.forEach((bar, index) => {
-        const box = document.createElement("div");
-        box.className = "bar-editor-box";
-        box.innerHTML = `
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <strong style="color: #00f2fe; font-size: 13px;">Barre #${index + 1}</strong>
-            <button class="btn btn-danger delete-btn" type="button">Supprimer</button>
-          </div>
-        `;
-
-        const entityPicker = document.createElement("ha-entity-picker");
-        entityPicker.label = "Entité (Capteur)";
-        entityPicker.value = bar.entity || "";
-        if (this._hass) entityPicker.hass = this._hass;
-        entityPicker.addEventListener("value-changed", (ev) => {
-          ev.stopPropagation();
-          this._updateBarProperty(index, "entity", ev.detail.value);
-        });
-        box.appendChild(entityPicker);
-
-        const nameField = document.createElement("div");
-        nameField.className = "field";
-        nameField.innerHTML = `<label>Nom personnalisé</label>`;
-        const nameInput = document.createElement("input");
-        nameInput.type = "text";
-        nameInput.value = bar.name || "";
-        nameInput.addEventListener("input", (e) => this._updateBarProperty(index, "name", e.target.value, false));
-        nameField.appendChild(nameInput);
-        box.appendChild(nameField);
-
-        const iconPicker = document.createElement("ha-icon-picker");
-        iconPicker.label = "Icône personnalisée";
-        iconPicker.value = bar.icon || "";
-        if (this._hass) iconPicker.hass = this._hass;
-        iconPicker.addEventListener("value-changed", (ev) => {
-          ev.stopPropagation();
-          this._updateBarProperty(index, "icon", ev.detail.value);
-        });
-        box.appendChild(iconPicker);
-
-        // Grille de sélection des couleurs (Début, Fin/Dégradé, Texte, Icône)
-        const barColorsRow = this._buildColorGrid([
-          { label: "Couleur Début", key: "color", value: bar.color || "#00f2fe" },
-          { label: "Couleur Fin", key: "color_end", value: bar.color_end || "" },
-          { label: "Couleur Texte", key: "text_color", value: bar.text_color || bar.color || "#00f2fe" },
-          { label: "Couleur Icône", key: "icon_color", value: bar.icon_color || bar.color || "#00f2fe" },
-        ], (key, value) => this._updateBarProperty(index, key, value, false));
-        box.appendChild(barColorsRow);
-
-        const limitsRow = document.createElement("div");
-        limitsRow.style.display = "grid";
-        limitsRow.style.gridTemplateColumns = "1fr 1fr";
-        limitsRow.style.gap = "10px";
-        limitsRow.innerHTML = `
-          <div class="field"><label>Minimum</label><input type="number" class="min-input" value="${bar.min !== undefined && bar.min !== null ? bar.min : ""}"></div>
-          <div class="field"><label>Maximum</label><input type="number" class="max-input" value="${bar.max !== undefined && bar.max !== null ? bar.max : ""}"></div>
-        `;
-        limitsRow.querySelector(".min-input").addEventListener("input", (e) => this._updateBarProperty(index, "min", e.target.value === "" ? "" : parseFloat(e.target.value), false));
-        limitsRow.querySelector(".max-input").addEventListener("input", (e) => this._updateBarProperty(index, "max", e.target.value === "" ? "" : parseFloat(e.target.value), false));
-        box.appendChild(limitsRow);
-
-        box.querySelector(".delete-btn").addEventListener("click", () => {
-          const barsCopy = [...(this._config.bars || [])];
-          barsCopy.splice(index, 1);
-          this._valueChanged("bars", barsCopy);
-          this._syncValues();
-        });
-
-        this._barsContainer.appendChild(box);
+      const iconPicker = document.createElement("ha-icon-picker");
+      iconPicker.label = "Icône personnalisée";
+      iconPicker.value = item.icon || "";
+      if (this._hass) iconPicker.hass = this._hass;
+      iconPicker.addEventListener("value-changed", (ev) => {
+        ev.stopPropagation();
+        this._updateEntityProperty(index, "icon", ev.detail.value);
       });
-    }
+      box.appendChild(iconPicker);
 
+      const colorsRow = this._buildColorGrid([
+        { label: "Bordure", key: "color", value: item.color || "#00f2fe" },
+        { label: "Texte", key: "text_color", value: item.text_color || item.color || "#00f2fe" },
+        { label: "Icône", key: "icon_color", value: item.icon_color || "#ffffff" },
+      ], (key, value) => this._updateEntityProperty(index, key, value));
+      box.appendChild(colorsRow);
+
+      const actionField = document.createElement("div");
+      actionField.className = "field";
+      actionField.innerHTML = `<label>Action au clic</label>`;
+      const actionSelector = document.createElement("ha-selector");
+      actionSelector.selector = { ui_action: {} };
+      actionSelector.value = item.action || { action: "more-info" };
+      if (this._hass) actionSelector.hass = this._hass;
+      actionSelector.addEventListener("value-changed", (ev) => {
+        ev.stopPropagation();
+        this._updateEntityProperty(index, "action", ev.detail.value);
+      });
+      actionField.appendChild(actionSelector);
+      box.appendChild(actionField);
+
+      box.querySelector(".delete-btn").addEventListener("click", () => {
+        const entitiesCopy = [...(this._config.entities || [])];
+        entitiesCopy.splice(index, 1);
+        this._valueChanged("entities", entitiesCopy);
+        this._syncValues();
+      });
+
+      this._entitiesContainer.appendChild(box);
+    });
+
+    // Gestion propre du conteneur des barres graduées
+    this._barsContainer.innerHTML = "";
+    bars.forEach((bar, index) => {
+      const box = document.createElement("div");
+      box.className = "bar-editor-box";
+      box.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <strong style="color: #00f2fe; font-size: 13px;">Barre #${index + 1}</strong>
+          <button class="btn btn-danger delete-btn" type="button">Supprimer</button>
+        </div>
+      `;
+
+      const entityPicker = document.createElement("ha-entity-picker");
+      entityPicker.label = "Entité (Capteur)";
+      entityPicker.value = bar.entity || "";
+      if (this._hass) entityPicker.hass = this._hass;
+      entityPicker.addEventListener("value-changed", (ev) => {
+        ev.stopPropagation();
+        this._updateBarProperty(index, "entity", ev.detail.value);
+      });
+      box.appendChild(entityPicker);
+
+      const nameField = document.createElement("div");
+      nameField.className = "field";
+      nameField.innerHTML = `<label>Nom personnalisé</label>`;
+      const nameInput = document.createElement("input");
+      nameInput.type = "text";
+      nameInput.value = bar.name || "";
+      nameInput.addEventListener("input", (e) => this._updateBarProperty(index, "name", e.target.value, false));
+      nameField.appendChild(nameInput);
+      box.appendChild(nameField);
+
+      const iconPicker = document.createElement("ha-icon-picker");
+      iconPicker.label = "Icône personnalisée";
+      iconPicker.value = bar.icon || "";
+      if (this._hass) iconPicker.hass = this._hass;
+      iconPicker.addEventListener("value-changed", (ev) => {
+        ev.stopPropagation();
+        this._updateBarProperty(index, "icon", ev.detail.value);
+      });
+      box.appendChild(iconPicker);
+
+      const barColorsRow = this._buildColorGrid([
+        { label: "Couleur Début", key: "color", value: bar.color || "#00f2fe" },
+        { label: "Couleur Fin", key: "color_end", value: bar.color_end || "" },
+        { label: "Couleur Texte", key: "text_color", value: bar.text_color || bar.color || "#00f2fe" },
+        { label: "Couleur Icône", key: "icon_color", value: bar.icon_color || bar.color || "#00f2fe" },
+      ], (key, value) => this._updateBarProperty(index, key, value, false));
+      box.appendChild(barColorsRow);
+
+      const limitsRow = document.createElement("div");
+      limitsRow.style.display = "grid";
+      limitsRow.style.gridTemplateColumns = "1fr 1fr";
+      limitsRow.style.gap = "10px";
+      limitsRow.innerHTML = `
+        <div class="field"><label>Minimum</label><input type="number" class="min-input" value="${bar.min !== undefined && bar.min !== null ? bar.min : ""}"></div>
+        <div class="field"><label>Maximum</label><input type="number" class="max-input" value="${bar.max !== undefined && bar.max !== null ? bar.max : ""}"></div>
+      `;
+      limitsRow.querySelector(".min-input").addEventListener("input", (e) => this._updateBarProperty(index, "min", e.target.value === "" ? "" : parseFloat(e.target.value), false));
+      limitsRow.querySelector(".max-input").addEventListener("input", (e) => this._updateBarProperty(index, "max", e.target.value === "" ? "" : parseFloat(e.target.value), false));
+      box.appendChild(limitsRow);
+
+      box.querySelector(".delete-btn").addEventListener("click", () => {
+        const barsCopy = [...(this._config.bars || [])];
+        barsCopy.splice(index, 1);
+        this._valueChanged("bars", barsCopy);
+        this._syncValues();
+      });
+
+      this._barsContainer.appendChild(box);
+    });
+
+    // Gestion propre du conteneur des boutons de commandes
     if (this._buttonsContainer) {
       this._buttonsContainer.innerHTML = "";
       getButtonRows(buttons, this._config).forEach(({ rowIndex, perRow: currentPerRow, startIndex, rowButtons }) => {
@@ -2326,7 +2324,7 @@ class FieldITechMultifunctionCardEditor extends HTMLElement {
 
     this._updateVisibility();
   }
-
+  
   _updateEntityProperty(index, key, value, triggerSync = true) {
     const entities = [...(this._config.entities || [])];
     if (entities[index]) {
