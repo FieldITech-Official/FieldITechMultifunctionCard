@@ -1,9 +1,6 @@
 // --------------------------------------------------------------------------------
 // FieldITechMultifunctionCard (Intégration complète : Titre, Entités, Barres Multiples, Boutons & Alertes Multiples) - https://fielditech.com
 // --------------------------------------------------------------------------------
-
-// Découpe une liste de boutons en lignes, en respectant la config "row_per_row_N" (1 à 4 par ligne, défaut 4).
-// Fonction partagée entre le rendu de la carte et l'éditeur (logique auparavant dupliquée).
 function getButtonRows(buttons, cfg) {
   const rows = [];
   let index = 0;
@@ -2270,6 +2267,16 @@ class FieldITechMultifunctionCardEditor extends HTMLElement {
             this._updateButtonProperty(index, "entity", ev.detail.value);
           });
           box.appendChild(entityPicker);
+
+          const btnNameField = document.createElement("div");
+          btnNameField.className = "field";
+          btnNameField.innerHTML = `<label>Nom personnalisé</label>`;
+          const btnNameInput = document.createElement("input");
+          btnNameInput.type = "text";
+          btnNameInput.value = btn.name || "";
+          btnNameInput.addEventListener("input", (e) => this._updateButtonProperty(index, "name", e.target.value, false));
+          btnNameField.appendChild(btnNameInput);
+          box.appendChild(btnNameField);
 
           const iconPicker = document.createElement("ha-icon-picker");
           iconPicker.label = "Icône du bouton";
