@@ -11,6 +11,10 @@ Si ce projet vous est utile et vous fait gagner un peu de temps, vous pouvez m'a
 
 **FieldITechMultifunctionCard** est une carte Lovelace hautement personnalisable et élégante pour **Home Assistant**, conçue et développée pour le site **FieldITech**. Elle permet d'afficher des pièces ou des équipements de manière moderne avec des effets néon, des en-têtes personnalisables, des blocs de télémesure flexibles, des barres graduées multiples et des grilles de boutons de commande interactifs.
 
+La présentation de cette carte est disponible sur youtube https://youtu.be/U2S88d_l_3E
+
+Vous pouvez aussi me suivre sur ma chaîne youtube https://fielditech.com/9mcd
+
 ---
 
 ## 🚀 Fonctionnalités Principales
